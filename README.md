@@ -1,7 +1,7 @@
-My Rust Project Template
+# endpoint-spec
 
-![Clippy check](https://github.com/unleashed/rust-template/workflows/Clippy%20check/badge.svg)
-![Security audit](https://github.com/unleashed/rust-template/workflows/Security%20audit/badge.svg)
-![Continuous integration](https://github.com/unleashed/rust-template/workflows/Continuous%20integration/badge.svg)
+![Clippy check](https://github.com/3scale-rs/endpoint-spec/workflows/Clippy%20check/badge.svg)
+![Security audit](https://github.com/3scale-rs/endpoint-spec/workflows/Security%20audit/badge.svg)
+![Continuous integration](https://github.com/3scale-rs/endpoint-spec/workflows/Continuous%20integration/badge.svg)
 
-This is just a template, replace this text with your own.
+A crate to describe HTTP endpoints including response deserialization.

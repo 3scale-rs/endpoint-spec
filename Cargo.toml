@@ -1,5 +1,5 @@
 [package]
-name = "rust-template"
+name = "endpoint-spec"
 version = "0.1.0"
 authors = ["Alejandro Martinez Ruiz <alex@flawedcode.org>"]
 edition = "2018"
