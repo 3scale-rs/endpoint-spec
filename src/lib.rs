@@ -1,5 +1,8 @@
 #![deny(clippy::warnings)]
 
+mod endpoint_spec;
+mod serde;
+
 #[cfg(test)]
 mod tests {
     #[test]
