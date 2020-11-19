@@ -1,6 +1,9 @@
 #![deny(clippy::warnings)]
 
+mod body_spec;
 mod endpoint_spec;
+mod headers_spec;
+mod path_spec;
 mod serde;
 
 #[cfg(test)]

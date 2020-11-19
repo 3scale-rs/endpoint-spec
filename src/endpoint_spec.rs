@@ -3,14 +3,17 @@ use core::marker::PhantomData;
 use http::Method;
 use serde::de::{Deserialize, DeserializeOwned};
 
+use super::body_spec::BodySpec;
+use super::headers_spec::{HeadersSpec, TrailersSpec};
+use super::path_spec::PathSpec;
 use super::serde::DeserializerFormat;
 
 pub struct EndpointSpec<B, D, T> {
     method: Method,
-    path: String,
-    headers: Vec<(String, String)>,
-    body: Option<B>,
-    trailers: Option<Vec<(String, String)>>,
+    path_spec: PathSpec,
+    headers_spec: HeadersSpec,
+    body_spec: BodySpec<B>,
+    trailers_spec: TrailersSpec,
     deserializer: D,
     data_type: PhantomData<T>,
 }
@@ -18,18 +21,18 @@ pub struct EndpointSpec<B, D, T> {
 impl<B, D, T> EndpointSpec<B, D, T> {
     pub fn new(
         method: Method,
-        path: impl ToString,
-        headers: Vec<(String, String)>,
-        body: Option<B>,
-        trailers: Option<Vec<(String, String)>>,
+        path_spec: PathSpec,
+        headers_spec: HeadersSpec,
+        body_spec: BodySpec<B>,
+        trailers_spec: TrailersSpec,
         deserializer: D,
     ) -> Self {
         Self {
             method,
-            path: path.to_string(),
-            headers,
-            body,
-            trailers,
+            path_spec,
+            headers_spec,
+            body_spec,
+            trailers_spec,
             deserializer,
             data_type: PhantomData,
         }
@@ -39,20 +42,20 @@ impl<B, D, T> EndpointSpec<B, D, T> {
         &self.method
     }
 
-    pub fn path(&self) -> &str {
-        self.path.as_str()
+    pub fn path_spec(&self) -> &PathSpec {
+        &self.path_spec
     }
 
-    pub fn headers(&self) -> &Vec<(String, String)> {
-        self.headers.as_ref()
+    pub fn headers_spec(&self) -> &HeadersSpec {
+        &self.headers_spec
     }
 
-    pub fn body(&self) -> Option<&B> {
-        self.body.as_ref()
+    pub fn body_spec(&self) -> &BodySpec<B> {
+        &self.body_spec
     }
 
     pub fn headers_as_str(&self) -> Vec<(&str, &str)> {
-        self.headers()
+        self.headers_spec()
             .iter()
             .map(|(k, v)| (k.as_str(), v.as_str()))
             .collect()
