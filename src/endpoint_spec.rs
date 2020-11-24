@@ -8,9 +8,9 @@ use super::headers_spec::{HeadersSpec, TrailersSpec};
 use super::path_spec::PathSpec;
 use super::serde::DeserializerFormat;
 
-pub struct EndpointSpec<B, D, T> {
+pub struct EndpointSpec<'a, B, D, T> {
     method: Method,
-    path_spec: PathSpec,
+    path_spec: PathSpec<'a>,
     headers_spec: HeadersSpec,
     body_spec: BodySpec<B>,
     trailers_spec: TrailersSpec,
@@ -18,10 +18,10 @@ pub struct EndpointSpec<B, D, T> {
     data_type: PhantomData<T>,
 }
 
-impl<B, D, T> EndpointSpec<B, D, T> {
+impl<'a, B, D, T> EndpointSpec<'a, B, D, T> {
     pub fn new(
         method: Method,
-        path_spec: PathSpec,
+        path_spec: PathSpec<'a>,
         headers_spec: HeadersSpec,
         body_spec: BodySpec<B>,
         trailers_spec: TrailersSpec,
@@ -42,7 +42,7 @@ impl<B, D, T> EndpointSpec<B, D, T> {
         &self.method
     }
 
-    pub fn path_spec(&self) -> &PathSpec {
+    pub fn path_spec(&self) -> &PathSpec<'a> {
         &self.path_spec
     }
 
@@ -54,15 +54,15 @@ impl<B, D, T> EndpointSpec<B, D, T> {
         &self.body_spec
     }
 
-    pub fn headers_as_str(&self) -> Vec<(&str, &str)> {
-        self.headers_spec()
-            .iter()
-            .map(|(k, v)| (k.as_str(), v.as_str()))
-            .collect()
-    }
+    //pub fn headers_as_str(&self) -> Vec<(&str, &str)> {
+    //    self.headers_spec()
+    //        .iter()
+    //        .map(|(k, v)| (k.as_str(), v.as_str()))
+    //        .collect()
+    //}
 }
 
-impl<'de, B, D: DeserializerFormat, T: Deserialize<'de>> EndpointSpec<B, D, T> {
+impl<'de, B, D: DeserializerFormat, T: Deserialize<'de>> EndpointSpec<'_, B, D, T> {
     #[inline(always)]
     pub fn parse_str(&self, response: &'de str) -> Result<T, anyhow::Error> {
         self.deserializer.parse_str(response)
@@ -74,7 +74,7 @@ impl<'de, B, D: DeserializerFormat, T: Deserialize<'de>> EndpointSpec<B, D, T> {
     }
 }
 
-impl<'de, B, D: DeserializerFormat, T: DeserializeOwned> EndpointSpec<B, D, T> {
+impl<B, D: DeserializerFormat, T: DeserializeOwned> EndpointSpec<'_, B, D, T> {
     #[inline(always)]
     fn parse_reader<R: std::io::Read>(&self, rdr: R) -> Result<T, anyhow::Error> {
         self.deserializer.parse_reader(rdr)

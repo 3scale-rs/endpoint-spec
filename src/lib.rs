@@ -3,6 +3,7 @@
 mod body_spec;
 mod endpoint_spec;
 mod headers_spec;
+mod parameters_spec;
 mod path_spec;
 mod serde;
 
